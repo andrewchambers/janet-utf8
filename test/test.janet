@@ -29,7 +29,7 @@
 
 (assert (= (utf8/to-lower "ABCÄ") "abcä"))
 (assert (= (utf8/to-upper "abcä") "ABCÄ"))
-# Test jmalloc code path
+# Test smalloc code path
 (assert (= (utf8/to-lower "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
                           "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
 
