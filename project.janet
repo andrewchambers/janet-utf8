@@ -27,11 +27,12 @@
                  (string/replace-all "#include \"utf8proc_data.c\"" "#include \"../utf8proc/utf8proc_data.c\""))))
 
 
-(def utf8-obj-file
+(def utf8-obj-files
   (if (= (os/which) :windows)
-    "build\\utf8.obj"
-    "build/utf8.o"))
+    ["build\\utf8.obj" "build\\utf8.static.obj"]
+    ["build/utf8.o"]))
 
-(add-dep utf8-obj-file "build/utf8proc.h")
-(add-dep utf8-obj-file "build/utf8proc.c")
-(add-dep utf8-obj-file "utf8proc/utf8proc_data.c")
+(each of utf8-obj-files
+  (add-dep of "build/utf8proc.h")
+  (add-dep of "build/utf8proc.c")
+  (add-dep of "utf8proc/utf8proc_data.c"))
