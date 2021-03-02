@@ -29,7 +29,7 @@
 
 (def utf8-obj-file
   (if (= (os/which) :windows)
-    "build/utf8.obj"
+    "build\\utf8.obj"
     "build/utf8.o"))
 
 (add-dep utf8-obj-file "build/utf8proc.h")
