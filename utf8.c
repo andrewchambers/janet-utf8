@@ -99,7 +99,7 @@ static inline Janet jutf8_normalize2(int argc, Janet *argv,
   Janet v;
   utf8proc_uint8_t *s = NULL;
   utf8proc_int32_t slen =
-      utf8proc_map(bv.bytes, bv.len, &s, UTF8PROC_STABLE | UTF8PROC_COMPOSE);
+      utf8proc_map(bv.bytes, bv.len, &s, options);
   if (slen < 0)
     janet_panicf("utf8 normalization failure: %s", utf8proc_errmsg(slen));
   v = janet_stringv(s, slen);
@@ -107,7 +107,7 @@ static inline Janet jutf8_normalize2(int argc, Janet *argv,
   return v;
 }
 
-static Janet jutf8_normalize_NCF(int argc, Janet *argv) {
+static Janet jutf8_normalize_NFC(int argc, Janet *argv) {
   return jutf8_normalize2(argc, argv, UTF8PROC_STABLE | UTF8PROC_COMPOSE);
 }
 
@@ -144,10 +144,10 @@ static const JanetReg cfuns[] = {
     {"to-codepoints", jutf8_to_codepoints,
      "(utf8/to-codepoints s)\n\nReturn an array containing s split into "
      "codepoints as janet numbers."},
-    {"normalize", jutf8_normalize_NCF,
+    {"normalize", jutf8_normalize_NFC,
      "(utf8/normalize s)\n\nReturn the utf8 NFC normalization of s."},
-    {"normalize-NCF", jutf8_normalize_NCF,
-     "(utf8/normalize-NCF s)\n\nReturn the utf8 NFC normalization of s."},
+    {"normalize-NFC", jutf8_normalize_NFC,
+     "(utf8/normalize-NFC s)\n\nReturn the utf8 NFC normalization of s."},
     {"normalize-NFD", jutf8_normalize_NFD,
      "(utf8/normalize-NFD s)\n\nReturn the utf8 NFD normalization of s."},
     {"normalize-NFKD", jutf8_normalize_NFKD,
