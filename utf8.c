@@ -10,7 +10,7 @@
 #define alloca _alloca
 #endif
 
-#include <utf8proc.h>
+#include "utf8proc/utf8proc.h"
 
 static Janet jutf8_valid(int argc, Janet *argv) {
   janet_fixarity(argc, 1);
@@ -67,11 +67,6 @@ static Janet jutf8_to_lower(int argc, Janet *argv) {
 
 static Janet jutf8_to_upper(int argc, Janet *argv) {
   return jutf8_conv_case(argc, argv, 1);
-}
-
-static Janet jutf8_to_runes(int argc, Janet *argv) {
-  janet_fixarity(argc, 1);
-  const utf8proc_uint8_t *s = janet_getstring(argv, 0);
 }
 
 static Janet jutf8_to_codepoints(int argc, Janet *argv) {

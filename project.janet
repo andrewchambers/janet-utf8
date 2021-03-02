@@ -7,7 +7,6 @@
 
 (declare-native
   :name "utf8"
-  :cflags ["-g" "-Iutf8proc"]
   :source [
     "utf8proc/utf8proc.c"
     "utf8.c"
