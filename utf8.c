@@ -10,7 +10,7 @@
 #define alloca _alloca
 #endif
 
-#include "utf8proc/utf8proc.h"
+#include "build/utf8proc.c"
 
 static Janet jutf8_valid(int argc, Janet *argv) {
   janet_fixarity(argc, 1);

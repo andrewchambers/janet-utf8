@@ -7,7 +7,26 @@
 
 (declare-native
   :name "utf8"
-  :source [
-    "utf8proc/utf8proc.c"
-    "utf8.c"
-  ])
+  :source ["utf8.c"])
+
+# Some dirty patches to make all our utf8 proc symbols private, this also helps us build on windows.
+
+(rule "build/utf8proc.h" ["utf8proc/utf8proc.h"]
+      (os/mkdir "build")
+      (spit "build/utf8proc.h"
+            (->> (slurp "utf8proc/utf8proc.h")
+                 (string/replace-all "\nUTF8PROC_DLLEXPORT extern" "\nstatic ")
+                 (string/replace-all "\nUTF8PROC_DLLEXPORT " "\nstatic "))))
+
+(rule "build/utf8proc.c" ["utf8proc/utf8proc.c"]
+      (os/mkdir "build")
+
+      (spit "build/utf8proc.c"
+            (->> (slurp "utf8proc/utf8proc.c")
+                 (string/replace-all "\nUTF8PROC_DLLEXPORT " "\nstatic ")
+                 (string/replace-all "#include \"utf8proc_data.c\"" "#include \"../utf8proc/utf8proc_data.c\""))))
+
+
+(add-dep "build/utf8.o" "build/utf8proc.h")
+(add-dep "build/utf8.o" "build/utf8proc.c")
+(add-dep "build/utf8.o" "utf8proc/utf8proc_data.c")
