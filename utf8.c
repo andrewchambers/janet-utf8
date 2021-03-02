@@ -23,6 +23,7 @@ static Janet jutf8_valid(int argc, Janet *argv) {
     if (r == -1)
       return janet_wrap_boolean(0);
     l -= sz;
+    s += sz;
   }
   return janet_wrap_boolean(1);
 }

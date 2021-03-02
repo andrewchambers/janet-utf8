@@ -2,12 +2,14 @@
 
 (def valid?-positive-tests [
     "a"
+    "abc\xc3\xb1"
     "\xc3\xb1"
     "\xe2\x82\xa1"
     "\xf0\x90\x8c\xbc"
 ])
 
 (def valid?-negative-tests [
+    "abc\xc3\x28"
     "\xc3\x28"
     "\xa0\xa1"
     "\xe2\x28\xa1"
