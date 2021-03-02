@@ -18,12 +18,11 @@ static Janet jutf8_valid(int argc, Janet *argv) {
   const utf8proc_uint8_t *s = bv.bytes;
   utf8proc_ssize_t l = bv.len;
   utf8proc_int32_t r;
-  while (l > 0) {
-    utf8proc_ssize_t sz = utf8proc_iterate(s, l, &r);
+  for (utf8proc_ssize_t i = 0; i < l;) {
+    utf8proc_ssize_t sz = utf8proc_iterate(s + i, l - i, &r);
     if (r == -1)
       return janet_wrap_boolean(0);
-    l -= sz;
-    s += sz;
+    i += sz;
   }
   return janet_wrap_boolean(1);
 }
@@ -94,8 +93,7 @@ static inline Janet jutf8_normalize2(int argc, Janet *argv,
   JanetByteView bv = janet_getbytes(argv, 0);
   Janet v;
   utf8proc_uint8_t *s = NULL;
-  utf8proc_int32_t slen =
-      utf8proc_map(bv.bytes, bv.len, &s, options);
+  utf8proc_int32_t slen = utf8proc_map(bv.bytes, bv.len, &s, options);
   if (slen < 0)
     janet_panicf("utf8 normalization failure: %s", utf8proc_errmsg(slen));
   v = janet_stringv(s, slen);
