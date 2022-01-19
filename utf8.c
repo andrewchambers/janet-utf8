@@ -113,7 +113,7 @@ static Janet jutf8_from_codepoints(int argc, Janet *argv) {
 
   }
   Janet v = janet_stringv(s, bytes_converted);
-  if (l > alloca_limit) {
+  if (sl > alloca_limit) {
     janet_sfree(s);
   }
   return v;
