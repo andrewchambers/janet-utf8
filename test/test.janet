@@ -40,3 +40,6 @@
 # Basic sanity test.
 (assert (= (utf8/normalize "abc😀") "abc😀"))
 
+# Test from- and to-codepoints
+(def s "ěščřžýáíé")
+(assert (= s (utf8/from-codepoints (utf8/to-codepoints s))))
