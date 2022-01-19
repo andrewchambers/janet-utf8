@@ -43,3 +43,6 @@
 # Test from- and to-codepoints
 (def s "ěščřžýáíé")
 (assert (= s (utf8/from-codepoints (utf8/to-codepoints s))))
+
+(try (utf8/from-codepoints [[]])
+  ([e] (assert (= e "0th member of the sequence is not janet number"))))
