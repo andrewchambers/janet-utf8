@@ -98,11 +98,9 @@ static Janet jutf8_from_codepoints(int argc, Janet *argv) {
   utf8proc_uint8_t *s = sl > alloca_limit ? janet_smalloc(sl) : alloca(sl);
   for (utf8proc_ssize_t i = 0; i < l; i++) {
     utf8proc_uint8_t r[4];
-    utf8proc_int32_t cp;
-    if (janet_checktype(c[i], JANET_NUMBER)) 
-      cp = janet_unwrap_integer(c[i]);
-    else 
+    if (!janet_checktype(c[i], JANET_NUMBER)) 
       janet_panicf("%ith member of the sequence is not janet number", i);
+    utf8proc_int32_t cp = janet_unwrap_integer(c[i]);
     utf8proc_ssize_t sz = utf8proc_encode_char(cp, r);
     if (sz == 0)
       janet_panicf("%v is not a valid unicode sequence: %s", argv[0],
