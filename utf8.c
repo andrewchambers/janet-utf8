@@ -87,6 +87,36 @@ static Janet jutf8_to_codepoints(int argc, Janet *argv) {
   return janet_wrap_array(a);
 }
 
+static Janet jutf8_from_codepoints(int argc, Janet *argv) {
+  janet_fixarity(argc, 1);
+  JanetView jv = janet_getindexed(argv, 0);
+  const Janet *c = jv.items;
+  utf8proc_ssize_t l = jv.len;
+  utf8proc_ssize_t sl = l * 4;
+  utf8proc_ssize_t bytes_converted = 0;
+  const utf8proc_ssize_t alloca_limit = 64;
+  utf8proc_uint8_t *s = sl > alloca_limit ? janet_smalloc(sl) : alloca(sl);
+  for (utf8proc_ssize_t i = 0; i < l; i++) {
+    utf8proc_uint8_t r[4];
+    if (!janet_checktype(c[i], JANET_NUMBER)) 
+      janet_panicf("%ith member of the sequence is not janet number", i);
+    utf8proc_int32_t cp = janet_unwrap_integer(c[i]);
+    utf8proc_ssize_t sz = utf8proc_encode_char(cp, r);
+    if (sz == 0)
+      janet_panicf("%v is not a valid unicode sequence: %s", argv[0],
+                   utf8proc_errmsg(sz));
+    for (utf8proc_ssize_t j = 0; j < sz; j++) {
+      s[bytes_converted++] = r[j];
+    };
+
+  }
+  Janet v = janet_stringv(s, bytes_converted);
+  if (sl > alloca_limit) {
+    janet_sfree(s);
+  }
+  return v;
+}
+
 static inline Janet jutf8_normalize2(int argc, Janet *argv,
                                      utf8proc_option_t options) {
   janet_fixarity(argc, 1);
@@ -138,6 +168,9 @@ static const JanetReg cfuns[] = {
     {"to-codepoints", jutf8_to_codepoints,
      "(utf8/to-codepoints s)\n\nReturn an array containing s split into "
      "codepoints as janet numbers."},
+    {"from-codepoints", jutf8_from_codepoints,
+     "(utf8/from-codepoints s)\n\nReturn a janet string"
+     "from sequence of codepoints as janet numbers."},
     {"normalize", jutf8_normalize_NFC,
      "(utf8/normalize s)\n\nReturn the utf8 NFC normalization of s."},
     {"normalize-NFC", jutf8_normalize_NFC,
